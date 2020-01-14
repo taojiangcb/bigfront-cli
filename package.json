@@ -1,0 +1,28 @@
+{
+  "name": "bigfront-cli",
+  "version": "1.0.4",
+  "description": "Create some projects quickly,koa based on ioc,SAP and SSR based on react",
+  "main": "./bin/bigfront-cli",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tao",
+  "license": "ISC",
+  "bin": {
+    "bigfront-cli": "./bin/bigfront-cli"
+  },
+  "dependencies": {
+    "commander": "^4.1.0",
+    "download-git-repo": "^3.0.2",
+    "figlet": "^1.2.4",
+    "inquirer": "^7.0.3",
+    "ora": "^4.0.3",
+    "shelljs": "^0.8.3"
+  },
+  "keywords": [
+    "koa",
+    "koa-ioc",
+    "ioc",
+    "ssr"
+  ]
+}

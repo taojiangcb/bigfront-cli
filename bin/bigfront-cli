@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const program = require("commander");
+const inquirer = require('inquirer');
+
+const shell = require('shelljs');
+const ora = require('ora');
+const spinner = ora('down loading template...')
+
+program.usage('[cmd] <options>')
+  .arguments('<cmd> [env]')
+  .action(function (cmd, params) {
+    const handler = bindHandler[cmd];
+    typeof handler !== 'undefined' && handler(params);
+  })
+const bindHandler = {
+  create_koa_inversify(params) {
+    spinner.start();
+
+    const _pwd_dir = shell.pwd().stdout;//输出用户当前所在位置
+    const projectPath = `${_pwd_dir}/${params}`;
+
+    const download = require('download-git-repo');
+    //注意使用direct文件协议
+    const tempalte = 'direct:https://github.com/taojiangcb/koa-inversify-project.git';
+    download(tempalte, projectPath, { clone: true }, err => {
+      spinner.stop();//下载完成后关闭loading;
+      if (err) { console.log('download fail') }
+      else {
+        shell.sed('-i', 'yd-newbook-demo', params, projectPath + '/package.json');
+        shell.sed('-i', 'YD-NEW-BOOK', params, projectPath + '/.vscode/launch.json');
+        console.log('download success')
+      }
+    })
+
+    console.log(_pwd_dir);
+    console.log(projectPath);
+  }
+}
+
+//水印
+const figlet = require('figlet');//默认生成过程为异步
+const versionStr = figlet.textSync('BIG-FRONT-CLI');//修改为同步
+console.log(versionStr);
+
+//读取 package的version
+let _version = require('./../package.json').version;
+program.version(_version);
+program.parse(process.argv);
