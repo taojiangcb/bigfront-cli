@@ -1,6 +1,6 @@
 {
   "name": "bigfront-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Create some projects quickly,koa based on ioc,SAP and SSR based on react",
   "main": "./bin/bigfront-cli",
   "scripts": {
