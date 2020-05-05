@@ -3,8 +3,9 @@
 const fs = require('fs');
 const program = require("commander");
 const inquirer = require('inquirer');
-const { gitclone } = require('./gitdown');
+const { exec, execAsync } = require('./exec');
 
+const { gitDownLoader } = require('./gitdown');
 const shell = require('shelljs');
 
 program.usage('[cmd] <options>')
@@ -15,49 +16,45 @@ program.usage('[cmd] <options>')
   })
 
 const bindHandler = {
-  // create_koa_inversify(params) {
-  //   spinner.start();
-
-  //   const _pwd_dir = shell.pwd().stdout;//输出用户当前所在位置
-  //   const projectPath = `${_pwd_dir}/${params}`;
-
-  //   const download = require('download-git-repo');
-  //   //注意使用direct文件协议
-  //   const tempalte = 'direct:https://github.com/taojiangcb/koa-inversify-project.git';
-  //   download(tempalte, projectPath, { clone: true }, err => {
-  //     spinner.stop();//下载完成后关闭loading;
-  //     if (err) {
-  //       console.log('download fail')
-  //     }
-  //     else {
-  //       shell.sed('-i', 'yd-newbook-demo', params, projectPath + '/package.json');
-  //       shell.sed('-i', 'YD-NEW-BOOK', params, projectPath + '/.vscode/launch.json');
-  //       console.log('download success')
-  //     }
-  //   })
-  // }
-
   create_koa_inversify(params) {
     const _pwd_dir = shell.pwd().stdout;//输出用户当前所在位置
     const projectPath = `${_pwd_dir}/${params}`;
     //注意使用direct文件协议
     const tempalte = 'direct:https://github.com/taojiangcb/koa-inversify-project.git'
     let opts = { url: tempalte, path: projectPath, transtional: params };
-    gitclone(() => {
+    gitDownLoader(() => {
       shell.sed('-i', 'yd-newbook-demo', params, projectPath + '/package.json');
       shell.sed('-i', 'YD-NEW-BOOK', params, projectPath + '/.vscode/launch.json');
+      exec(`cd ${projectPath}`);
+      exec(`npm i --registory=https://registry.npm.taobao.org`);
       console.log('download success')
     }, opts)
   },
+
+  /**创建一个spa */
   create_react_spa(params) {
     const _pwd_dir = shell.pwd().stdout;//输出用户当前所在位置
     const projectPath = `${_pwd_dir}/${params}`;
     const tempalte = 'direct:https://github.com/taojiangcb/react_sap_temp.git'
     let opts = { url: tempalte, path: projectPath, transtional: params };
-    gitclone(() => {
+    gitDownLoader(() => {
       shell.sed('-i', 'react_sap_temp', params, projectPath + '/package.json');
       shell.sed('-i', 'react_sap_temp', params, projectPath + '/.vscode/launch.json');
-      console.log('download success')
+      console.log('download success');
+      exec(`cd ${projectPath}`);
+      try {
+        execAsync(`sudo npm i --registory=https://registry.npm.taobao.org`)
+          .then(() => {
+            console.log('project init complete');
+          })
+          .catch((reason) => {
+            shell.exec(`rm -fr ${projectPath}`);
+          })
+      }
+      catch (e) {
+        console.error(e);
+        shell.exec(`rm -fr ${projectPath}`);
+      }
     }, opts)
   }
 }

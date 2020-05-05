@@ -13,7 +13,7 @@ const spinner = ora('down loading template...')
  * } opts 
  * 
  */
-const gitclone = function (efn, opts) {
+const gitDownLoader = function (efn, opts) {
   let { url, path, transtional } = opts;
   if (url && path) {
     spinner && spinner.start();
@@ -33,4 +33,4 @@ const gitclone = function (efn, opts) {
   }
 }
 
-module.exports = { gitclone }
+module.exports = { gitDownLoader }
